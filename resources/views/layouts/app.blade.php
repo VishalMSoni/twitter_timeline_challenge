@@ -19,12 +19,13 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href={{ asset('css/css_file.css') }}>
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand heroTitle" href="{{ url('/') }}">
                     {{ config('app.name', 'Twitter_Timeline_Challenge') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -75,5 +76,7 @@
             @yield('content')
         </main>
     </div>
+
+    @yield('script')
 </body>
 </html>

@@ -11,8 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function () { 
+    return view('welcome'); 
 });
 
 Auth::routes();
@@ -31,3 +31,4 @@ Route::get('/getDetails', 'SocialAuthTwitterController@getSearchDetails');
 
 Route::get('/downloadFollowers', 'SocialAuthTwitterController@getFollowers');
 
+Route::get('htmlToPdfView', array('as'=>'htmlToPdfView','uses'=>'SocialAuthTwitterController@getFollowers'));

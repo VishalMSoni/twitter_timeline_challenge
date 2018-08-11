@@ -148,6 +148,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Thujohn\Twitter\TwitterServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -212,6 +213,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

@@ -62,6 +62,31 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+            .titleApp {
+
+            }
+            @media (min-width: 768px) and (max-width: 1024px) {
+                .titleApp {
+                    font-size: 65px;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+                .titleApp {
+                    font-size: 55px;
+                }
+            }
+            @media (min-width: 481px) and (max-width: 767px) {
+                .titleApp {
+                    font-size: 35px;
+                }
+            }
+
+            @media (min-width: 320px) and (max-width: 480px) {
+                .titleApp {
+                    font-size: 35px;
+                }
+            }
         </style>
     </head>
     <body>
@@ -78,7 +103,7 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
+                <div class="title m-b-md titleApp">
                     Twitter Timeline Challenge
                 </div>
             </div>
