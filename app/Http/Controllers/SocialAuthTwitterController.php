@@ -78,7 +78,18 @@ class SocialAuthTwitterController extends Controller
         foreach ($followers['users'] as $key => $value) {
             array_push($followers_id, $value['screen_name']);
         }
-        
+
+        foreach ($data as $key => $value) {
+            if (!empty($value['entities']['media'])) {
+                $imageData = base64_encode(file_get_contents($value['entities']['media'][0]['media_url']));
+                $imageData = 'data:image/jpeg;base64,'.$imageData;
+                $data[$key]['imageData'] = $imageData;
+            }
+        }
+        // print_r("<pre>");
+        // print_r($data);
+        // print_r("<pre>");
+        // exit();
         return view('twitterTimeline', compact('data', 'followers', 'followers_id'));
     }
 
@@ -90,6 +101,13 @@ class SocialAuthTwitterController extends Controller
     public function getSearchDetails(Request $request)
     {
         $data = Twitter::getUserTimeline(['screen_name' => $request->search_string, 'count' => 10, 'format' => 'array']);
+        foreach ($data as $key => $value) {
+            if (!empty($value['entities']['media'])) {
+                $imageData = base64_encode(file_get_contents($value['entities']['media'][0]['media_url']));
+                $imageData = 'data:image/jpeg;base64,'.$imageData;
+                $data[$key]['imageData'] = $imageData;
+            }
+        }
         return $data;    
     }
 

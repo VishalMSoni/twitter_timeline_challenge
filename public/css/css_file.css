@@ -53,8 +53,8 @@ input[type=submit] {
 /*Slider CSS*/
 .slideshow {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 400px;
     padding: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
@@ -77,6 +77,10 @@ input[type=submit] {
 }
 .tweetCount{
     font-weight: 700;
+}
+.tweetImage{
+    height: 150px;
+    width: 150px;
 }
 .topStyle{
     

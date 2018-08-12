@@ -29,6 +29,10 @@
                             <div>
                                 <p class="userInfo">{{$value['user']['name']}}</p>
                                 <p class="userInfo userInfoPad">{{$value['user']['screen_name']}}</p>
+                                @if(!empty($value['imageData']))
+                                    <img class="img-rounded tweetImage" src={{ $value['imageData'] }}>
+                                @endif
+                                <br/><br/>
                                 <p id="textUser">{{ $value['text'] }}</p>
                                 <p class="tweetCount">{{$key+1}}</p>
                             </div>
@@ -102,6 +106,10 @@
                 <div>
                     <p class="userInfo">@{{value.user.name}}</p>
                     <p class="userInfo userInfoPad">@{{value.user.screen_name}}</p>    
+                    @{{#if value.imageData}}
+                        <img class="img-rounded tweetImage" src=@{{value.imageData}}>
+                        <br><br>
+                    @{{/if}}
                     <p>
                         @{{value.text}}
                     </p>

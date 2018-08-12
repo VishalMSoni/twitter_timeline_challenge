@@ -23,7 +23,7 @@
                     <br>
                     <br>
 
-                    <div class="fontStyle">    
+                    {{-- <div class="fontStyle">    
                         <strong>
                             There are two options:<br> 1.XML (only id's will be shown -> 5000 id's at a time*15 call as per rate limit = 75000 followers)
                         </strong>
@@ -32,7 +32,7 @@
                             2.XML (id's , screen_name & Name will be shown -> 200 at a time*15 call = 3000 followers)
                         </strong>
                     </div>
-                    <br><br>
+                    <br><br> --}}
 
                     <form action="{{ url('/downloadFollowers') }}" id="downloadForm">
                         <div class="form-group row">
@@ -40,8 +40,8 @@
                                 <input class="form-control" id="followerName" type="text" name="followerName" placeholder="Enter valid Screen name of user" required>
                             </div>
                             <div class="col-md-3 topStyle bottomStyle">
-                                <input type="radio" name="downloadType" value="xml_id" id="downloadType" required>XML (id)<br>
-                                <input type="radio" name="downloadType" value="xml_name" id="downloadType">XML (Name)<br>
+                                <input type="radio" name="downloadType" value="xml_id" id="downloadType" required>XML (only id's)<br>
+                                <input type="radio" name="downloadType" value="xml_name" id="downloadType">XML (id's & Names)<br>
                                 <input type="radio" name="downloadType" value="pdf" id="downloadType">PDF
                             </div>
                             <div class="col-md-2">
