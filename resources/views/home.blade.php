@@ -23,17 +23,6 @@
                     <br>
                     <br>
 
-                    {{-- <div class="fontStyle">    
-                        <strong>
-                            There are two options:<br> 1.XML (only id's will be shown -> 5000 id's at a time*15 call as per rate limit = 75000 followers)
-                        </strong>
-                        <br>
-                        <strong>
-                            2.XML (id's , screen_name & Name will be shown -> 200 at a time*15 call = 3000 followers)
-                        </strong>
-                    </div>
-                    <br><br> --}}
-
                     <form action="{{ url('/downloadFollowers') }}" id="downloadForm">
                         <div class="form-group row">
                             <div class="col-md-4">

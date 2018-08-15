@@ -8,7 +8,8 @@
  * @author    Vishal Soni <vishalsoni611@gmail.com>
  * @copyright 2018 My Company
  * @license   Licence Name
- * @version   SVN: $Id: coding-standard-tutorial.xml,v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * @version   SVN: $Id: coding-standard-tutorial.xml,
+   v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -29,14 +30,15 @@ use DOMAttr;
 use PDF;
 
 /**
- * Class summary
  * This class handles the all functionalities required 
+ *
  * @category  PHP 
  * @package   PHP_CodeSniffer
  * @author    Vishal Soni <vishalsoni611@gmail.com>
  * @copyright 2018 My Company
  * @license   Licence Name
- * @version   SVN: $Id: coding-standard-tutorial.xml,v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * @version   SVN: $Id: coding-standard-tutorial.xml,
+   v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -54,7 +56,7 @@ class SocialAuthTwitterController extends Controller
 
     /**
      * Callback method.
-     *
+     * 
      * @return userTimeline
      */
     public function callback(SocialTwitterAccountService $service)

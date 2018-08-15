@@ -8,7 +8,8 @@
  * @author    Vishal Soni <vishalsoni611@gmail.com>
  * @copyright 2018 My Company
  * @license   Licence Name
- * @version   SVN: $Id: coding-standard-tutorial.xml,v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * @version   SVN: $Id: coding-standard-tutorial.xml,
+   v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -16,14 +17,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class summary
  * This class creates one to one functionality by creating model 
+ *
  * @category  PHP 
  * @package   PHP_CodeSniffer
  * @author    Vishal Soni <vishalsoni611@gmail.com>
  * @copyright 2018 My Company
  * @license   Licence Name
- * @version   SVN: $Id: coding-standard-tutorial.xml,v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * @version   SVN: $Id: coding-standard-tutorial.xml,
+   v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
