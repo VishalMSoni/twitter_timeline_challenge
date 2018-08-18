@@ -61,5 +61,8 @@ Based on user's choice follower's will be downloaded succesfully to his/her pref
 - **Coding Standard** : I have used **[PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)** & **[JSHint](http://jshint.com/)** for cheking coding standards in localhost and i have tried to minimize the *errors & warnings*.
 - **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and puching the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
 
-
-
+#### Created By : 
+* Vishal Murlidhar Soni
+* Email : vishal.s.btechi15@ahduni.edu.in , vishalsoni611@gmail.com
+* School of Engineering and Applied Science (Ahmedabad University)
+* Phone no. 9429707486/8460806485
