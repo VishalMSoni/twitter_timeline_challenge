@@ -61,6 +61,15 @@ Based on user's choice follower's will be downloaded succesfully to his/her pref
 - **Coding Standard** : I have used **[PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)** & **[JSHint](http://jshint.com/)** for cheking coding standards in localhost and i have tried to minimize the *errors & warnings*.
 - **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and pushing the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
 
+## List of some important files
+- **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
+- **[SocialTwitterAccountService.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Services/SocialTwitterAccountService.php)**
+- **[twitterTimeline.blade.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/resources/views/twitterTimeline.blade.php)**
+- **[htmlToPdfView.blade.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/resources/views/htmlToPdfView.blade.php)**
+- **Model for relationship**
+  - **[SocialTwitterAccount.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/SocialTwitterAccount.php)**
+  - **[User.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/User.php)**
+
 #### Created By : 
 * Vishal Murlidhar Soni
 * Email : vishal.s.btechi15@ahduni.edu.in , vishalsoni611@gmail.com
