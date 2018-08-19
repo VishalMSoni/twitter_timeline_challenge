@@ -1,60 +1,68 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Twitter Timeline Challenge - rtCamp
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## About Twitter Timeline Challenge
 
-## About Laravel
+This Challenge consists of three parts such as:
+1. Connect using twitter auth & getting user tweets in JS slider
+2. Show user followers & search user tweets with showing in same slider via AJAX
+3. Download User's followers in pdf & xml format.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+## Working Demo of the challenge
+- **[Twitter Timeline Challenge - rtCamp](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/)**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Libraries used
+* **[Laravel Socialite](https://laravel.com/docs/5.6/socialite)**
+* **[thujohn twitter api](https://github.com/thujohn/twitter/blob/master/README.md)**
+* **[DOMPDF](https://github.com/dompdf/dompdf)**
+* PHP library **[DOMDOCUMENT](http://php.net/manual/en/class.domdocument.php)**.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+## Flow of the challenge 
 
-## Learning Laravel
+#### Connection part
+Starting with the challenge i have created a new **Laravel** project after that for the connection part i have used **[Laravel Socialite](https://laravel.com/docs/5.6/socialite)** for authenticating user via twitter.So by login this will redirect us to the **Twitter** and once user is authenticated it will be return back to our script via callback function.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+#### Getting tweets & followers
+Once user is succesfully logged in now next part is to get tweets and followers of that user for that part i have used **[thujohn twitter api](https://github.com/thujohn/twitter/blob/master/README.md)**.Using this twitter api we can get the desired details by different functions ex.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+- **getUserTimeline()** : this function will return latest tweets of the user based on different parameters like:
+  - screen_name : user screen_name
+  - id : user id
+  - count : no. of tweets to get (for our part it is 10)
+- **getfollowers()** : this functions will return followers of the user with parameters like:
+  - screen_name : user screen_name
+  - id : user id
+  - count : no. of followers to get in one page after that we have to get details by providing next_cursor parameter
+    - if we want only id's of the followers of the user then we can get 5000 id's in one page
+    - or if we want to get id' , screen_name and other details then we can get 200 follower's detail in one page
 
-## Laravel Sponsors
+So after details are fetched tweets & followers will be showed in **JS slider & table** respectively.
+- If there are any *image* in particular tweet then that will be also showed in *JS Slider*
+- If there are *no tweets* then slider will reflect accordingly showing no tweets.
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+When user will search follower then his/her follower will be searched and **Auto-suggest support** will suggest the follower as soon as we start typing.Once follower is searched then his screen_name will be passed to respective function by **AJAX** call 
+ - if function returns data *succesfully* then it will be showed in **JS slider**
+ - otherwise **Alert** will be showed to write proper screen_name
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
+#### Download Followers
+I am providing user to download his/her followers in two formats **PDF & XML**.In that i am also providing **flexibility** to user like, **get only id's of followers** or **get id's,screen_name,name's of the followers**.
 
-## Contributing
+1. **XML** part i am using **[DOMDOCUMENT](http://php.net/manual/en/class.domdocument.php)** and
+2. **PDF** part **[DOMPDF](https://github.com/dompdf/dompdf)** is used.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Based on user's choice follower's will be downloaded succesfully to his/her preffered location in the PC.
 
-## Security Vulnerabilities
+## Limitations
+- In downloading followers we can download upto 75000 followers, based on twitter api rate limit constraint.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Coding Guidelines 
+- **UI Framework** : As i am using laravel application so that is following **Twitter Bootstrap** so i have used as much as i can of twitter Bootstrap
+- **Responsive** : I have taken care of this and for that media queries are written in '*public/css/css_file.css*'.Also checked in different mobile like iphone4,iphone6,Mi A1 and Mi Note3.It works succesfully in all the mobiles and followers are downloaded in desired formats.
+- **Code Organisation** : As i am using laravel application so it is not possible to put all the 3rd party codes and libraries in **lib** folder because controller's code should be in *app* folder, 3rd party libraries are in *vendor & composer.json* folder. 
+- **Coding Standard** : I have used **[PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)** & **[JSHint](http://jshint.com/)** for cheking coding standards in localhost and i have tried to minimize the *errors & warnings*.
+- **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and puching the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Created By : 
+* Vishal Murlidhar Soni
+* Email : vishal.s.btechi15@ahduni.edu.in , vishalsoni611@gmail.com
+* School of Engineering and Applied Science (Ahmedabad University)
+* Phone no. 9429707486/8460806485
