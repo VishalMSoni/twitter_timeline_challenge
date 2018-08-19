@@ -59,7 +59,7 @@ Based on user's choice follower's will be downloaded succesfully to his/her pref
 - **Responsive** : I have taken care of this and for that media queries are written in '*public/css/css_file.css*'.Also checked in different mobile like iphone4,iphone6,Mi A1 and Mi Note3.It works succesfully in all the mobiles and followers are downloaded in desired formats.
 - **Code Organisation** : As i am using laravel application so it is not possible to put all the 3rd party codes and libraries in **lib** folder because controller's code should be in *app* folder, 3rd party libraries are in *vendor & composer.json* folder. 
 - **Coding Standard** : I have used **[PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)** & **[JSHint](http://jshint.com/)** for cheking coding standards in localhost and i have tried to minimize the *errors & warnings*.
-- **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and puching the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
+- **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and pushing the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
 
 #### Created By : 
 * Vishal Murlidhar Soni
