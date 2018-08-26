@@ -27,7 +27,11 @@ use App\SocialTwitterAccount;
 use Session;
 use DOMDocument;
 use DOMAttr;
+use DOMXPath;
 use PDF;
+
+ini_set('max_execution_time', 0);
+include './simple_html_dom.php';
 
 /**
  * This class handles the all functionalities required 
@@ -88,10 +92,7 @@ class SocialAuthTwitterController extends Controller
                 $data[$key]['imageData'] = $imageData;
             }
         }
-        // print_r("<pre>");
-        // print_r($data);
-        // print_r("<pre>");
-        // exit();
+        
         return view('twitterTimeline', compact('data', 'followers', 'followers_id'));
     }
 
@@ -114,94 +115,91 @@ class SocialAuthTwitterController extends Controller
     }
 
     /**
+     * This method download the followers from html using curl
+     * 
+     * @return void
+     */
+    public function getFollowersByHtml($url2, $i = 0, $dom, $root) 
+    {        
+        $url = 'https://twitter.com' . $url2;
+        $ch = curl_init();
+        $timeout = 5;
+        $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
+        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        $data = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+        $html = str_get_html($data);
+
+        $allFollowers = [];
+        $key = 0;
+
+        foreach ($html->find('.user-item') as $element) {
+            $name = $element->find('.fullname', 0)->innertext;
+            $id2 = $element->find('.username', 0)->innertext;
+            $allFollowers[$key]['name'] = $name;
+            $allFollowers[$key]['screen_name'] = strip_tags($id2);
+            $key++;
+        }
+
+        foreach ($allFollowers as $key => $value) {
+            $follower_number = $key + $i*20 + 1;
+            $follower_node = $dom->createElement('follower_'.$follower_number);
+            
+            $child_node_id = $dom->createElement('Name', $value['name']);
+            $follower_node->appendChild($child_node_id);
+            
+            $child_node_screen_name = $dom->createElement('Screen_Name', $value['screen_name']);
+            $follower_node->appendChild($child_node_screen_name);
+            
+            $root->appendChild($follower_node);
+        }
+
+        $cursor = @$html->find('.w-button-more a', 0)->href;
+        if ($i < 500000 && $cursor) {
+            $dom = SocialAuthTwitterController::getFollowersByHtml($cursor, ++$i, $dom, $root);
+        }
+
+        return $dom;        
+    }
+
+    /**
      * This method generates the xml file of followers for specific user
      * 
      * @return void
      */
     public function getFollowers(Request $request)
     {
-        if ($request->downloadType=="xml_id" || $request->downloadType=="xml_name") {
-            $dom = new DOMDocument();
-            $dom->encoding = 'utf-8';
-            $dom->xmlVersion = '1.0';
-            $dom->formatOutput = true;
-            $xml_file_name = $request->followerName.'.xml';
-            $sum = 0;
-            $root = $dom->createElement('Followers');
-            
-            $allFollowers = [];
+        $value = '/' . $request->followerName . '/followers';
+        $allFollowers = [];
+        $key = 0;
+        
+        $dom = new DOMDocument();
+        $dom->encoding = 'utf-8';
+        $dom->xmlVersion = '1.0';
+        $dom->formatOutput = true;
+        $xml_file_name = $request->followerName.'.xml';
+        $root = $dom->createElement('Followers');
+        
+        $dom = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
+        $dom->appendChild($root);
+        $dom->save($xml_file_name);
+        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...'; 
 
-            if ($request->downloadType=="xml_id") {
-                $followers = Twitter::get('followers/ids', array('screen_name' => $request->followerName, 'count' => 5000 ,'format' => 'array'));
+        // if ($request->downloadType=="pdf") {
+        //     view()->share('allFollowers', $allFollowers);
+        //     $pdf_file_name = $request->followerName.'.pdf';
 
-                array_push($allFollowers, $followers);
-                while ($followers['next_cursor']!=0) {
-                    $followers = Twitter::get('followers/ids', array('screen_name' => $request->followerName, 'count' => 5000 ,'cursor' => $followers['next_cursor'] ,'format' => 'array'));
-                    array_push($allFollowers, $followers);
-                }
-
-                foreach ($allFollowers as $key => $value) {
-                    if ($value['ids']) {
-                        foreach ($value['ids'] as $inner_key => $inner_value) {
-                            $follower_number = $sum + $inner_key + 1;
-                            $follower_node = $dom->createElement('follower_'.$follower_number);
-                            
-                            $child_node_id = $dom->createElement('Id', $inner_value);
-                            $follower_node->appendChild($child_node_id);
-                            
-                            $root->appendChild($follower_node);
-                        }
-                        $sum = $follower_number;
-                    }
-                }
-            } else if ($request->downloadType=="xml_name") {
-                $followers = Twitter::getFollowers(['screen_name' => $request->followerName, 'count' => 200, 'format' => 'array']);
-                array_push($allFollowers, $followers);
-                
-                while ($followers['next_cursor']!=0) {
-                    $followers = Twitter::getFollowers(['screen_name' => $request->followerName, 'count' => 200, 'cursor' => $followers['next_cursor'] , 'format' => 'array']);    
-                    array_push($allFollowers, $followers);
-                } 
-
-                foreach ($allFollowers as $key => $value) {
-                    if ($value['users']) {
-                        foreach ($value['users'] as $inner_key => $inner_value) {
-                            $follower_number = $sum + $inner_key + 1;
-                            $follower_node = $dom->createElement('follower_'.$follower_number);
-                            
-                            $child_node_id = $dom->createElement('Id', $inner_value['id']);
-                            $follower_node->appendChild($child_node_id);
-                            
-                            $child_node_screen_name = $dom->createElement('Screen_Name', $inner_value['screen_name']);
-                            $follower_node->appendChild($child_node_screen_name);
-                            
-                            $child_node_name = $dom->createElement('Name', htmlspecialchars($inner_value['name']));
-                            $follower_node->appendChild($child_node_name);
-                            $root->appendChild($follower_node);
-                        }
-                        $sum = $follower_number;
-                    }
-                }
-            } 
-
-            $dom->appendChild($root);
-            $dom->save($xml_file_name);
-            echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...';
-        } else if ($request->downloadType=="pdf") {
-            $allFollowers = [];
-            $followers = Twitter::getFollowers(['screen_name' => $request->followerName, 'count' => 200, 'format' => 'array']);
-            array_push($allFollowers, $followers);
-            
-            while ($followers['next_cursor']!=0) {
-                $followers = Twitter::getFollowers(['screen_name' => $request->followerName, 'count' => 200, 'cursor' => $followers['next_cursor'] , 'format' => 'array']);    
-                array_push($allFollowers, $followers);
-            }
-
-            view()->share('allFollowers', $allFollowers);
-            $pdf_file_name = $request->followerName.'.pdf';
-
-            $pdf = PDF::loadView('htmlToPdfView');
-            return $pdf->download($request->followerName.'.pdf');
-        } 
+        //     $pdf = PDF::loadView('htmlToPdfView');
+        //     return $pdf->download($request->followerName.'.pdf');
+        // } 
     }
+
 }

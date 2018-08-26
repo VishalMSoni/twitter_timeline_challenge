@@ -28,11 +28,10 @@
                             <div class="col-md-4">
                                 <input class="form-control" id="followerName" type="text" name="followerName" placeholder="Enter valid Screen name of user" required>
                             </div>
-                            <div class="col-md-3 topStyle bottomStyle">
-                                <input type="radio" name="downloadType" value="xml_id" id="downloadType" required>XML (only id's)<br>
-                                <input type="radio" name="downloadType" value="xml_name" id="downloadType">XML (id's & Names)<br>
+                            <!-- <div class="col-md-3 topStyle bottomStyle">
+                                <input type="radio" name="downloadType" value="xml" id="downloadType" required>XML<br>
                                 <input type="radio" name="downloadType" value="pdf" id="downloadType">PDF
-                            </div>
+                            </div> -->
                             <div class="col-md-2">
                                 <button type="submit" id="get_followers" class="btn btn-success" onclick="clearDetails()">Download Followers</button>
                             </div>

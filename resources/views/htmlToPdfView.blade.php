@@ -27,20 +27,16 @@
 
         <table>
             <tr>
-                <th>Id</th>
+                <th>No.</th>
                 <th>Screen Name</th>
                 <th>Name</th>
             </tr>
             @foreach ($allFollowers as $key => $value)
-                @if ($value['users'])
-                    @foreach ($value['users'] as $inner_key => $inner_value)
-                        <tr>
-                            <td>{{ $inner_value['id'] }}</td>
-                            <td>{{ $inner_value['screen_name'] }}</td>
-                            <td>{{ $inner_value['name'] }}</td>
-                        </tr>
-                    @endforeach
-                @endif
+                <tr>
+                    <td>{{ $key + 1}}</td>
+                    <td>{{ $value['name'] }}</td>
+                    <td>{{ $value['screen_name'] }}</td>
+                </tr>
             @endforeach
         </table>
     </div>
