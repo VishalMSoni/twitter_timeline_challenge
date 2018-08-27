@@ -60,7 +60,9 @@ I am providing user to download his/her followers in two formats **PDF & XML**.I
 Based on user's choice follower's will be downloaded succesfully to his/her preffered location in the PC.
 
 ## Limitations
-- In downloading followers we can download upto 75000 followers, based on twitter api rate limit constraint.
+- I have tried for **100K** followers with storing data in *array* in **PDF** format and it has download only upto **18000** followers which is not acceptable.
+- So, in downloading followers we can download followers only in **XML** format because of memory constraint.
+- If we want to download the followers in **PDF** then first we have to store all the followers in **Array** and then we have to share whole array to blade file so if we have huge amount of followers then it takes lot of time for processing.
 
 ## Coding Guidelines 
 - **UI Framework** : As i am using laravel application so that is following **Twitter Bootstrap** so i have used as much as i can of twitter Bootstrap
