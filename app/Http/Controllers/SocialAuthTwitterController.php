@@ -32,6 +32,7 @@ use Mail;
 use Xml2Pdf;
 
 ini_set('max_execution_time', 0);
+ini_set('memory_limit', '5120M');
 include './simple_html_dom.php';
 
 /**
@@ -120,7 +121,7 @@ class SocialAuthTwitterController extends Controller
      * 
      * @return void
      */
-    public function getFollowersByHtml($url2, $i = 0, $dom, $root) 
+    public function getFollowersByHtml($url2, $i=0, $dom, $root) 
     {        
         $url = 'https://twitter.com' . $url2;
         $ch = curl_init();
@@ -138,8 +139,6 @@ class SocialAuthTwitterController extends Controller
 
         curl_close($ch);
         $html = str_get_html($data);
-
-        $allFollowers = [];
         $key = 0;
 
         foreach ($html->find('.user-item') as $element) {
@@ -160,11 +159,7 @@ class SocialAuthTwitterController extends Controller
         }
 
         $cursor = @$html->find('.w-button-more a', 0)->href;
-        if ($i < 500000 && $cursor) {
-            $dom = SocialAuthTwitterController::getFollowersByHtml($cursor, ++$i, $dom, $root);
-        }
-
-        return $dom;        
+        return $cursor;        
     }
 
     /**
@@ -175,17 +170,22 @@ class SocialAuthTwitterController extends Controller
     public function getFollowers(Request $request)
     {
         $value = '/' . $request->followerName . '/followers';
-        $allFollowers = [];
-        $key = 0;
-        
         $dom = new DOMDocument();
         $dom->encoding = 'utf-8';
         $dom->xmlVersion = '1.0';
         $dom->formatOutput = true;
         $xml_file_name = $request->followerName.'.xml';
         $root = $dom->createElement('Followers');
+        $i = 0;
+
+        $cursor = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
+        $i++;
         
-        $dom = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
+        while ($cursor) {
+            $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);
+            $i++;
+        }
+
         $dom->appendChild($root);
         $dom->save($xml_file_name);
         echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...'; 
