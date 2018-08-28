@@ -9,7 +9,7 @@
  * @copyright 2018 My Company
  * @license   Licence Name
  * @version   SVN: $Id: coding-standard-tutorial.xml,
-   v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @copyright 2018 My Company
  * @license   Licence Name
  * @version   SVN: $Id: coding-standard-tutorial.xml,
-   v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 

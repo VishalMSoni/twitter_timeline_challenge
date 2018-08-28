@@ -9,7 +9,7 @@
  * @copyright 2018 My Company
  * @license   Licence Name
  * @version   SVN: $Id: coding-standard-tutorial.xml,
-   v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -20,15 +20,16 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Services\SocialTwitterAccountService;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Contracts\User as ProviderUser;
+use App\SocialTwitterAccount;
 use Twitter;
 use File;
 use Auth;
-use App\SocialTwitterAccount;
 use Session;
 use DOMDocument;
 use DOMAttr;
-use DOMXPath;
 use PDF;
+use Mail;
+use Xml2Pdf;
 
 ini_set('max_execution_time', 0);
 include './simple_html_dom.php';
@@ -42,7 +43,7 @@ include './simple_html_dom.php';
  * @copyright 2018 My Company
  * @license   Licence Name
  * @version   SVN: $Id: coding-standard-tutorial.xml,
-   v 1.9 2008-10-09 15:16:47 cweiske Exp $
+ * v 1.9 2008-10-09 15:16:47 cweiske Exp $
  * @link      At github       
  **/
 
@@ -144,22 +145,18 @@ class SocialAuthTwitterController extends Controller
         foreach ($html->find('.user-item') as $element) {
             $name = $element->find('.fullname', 0)->innertext;
             $id2 = $element->find('.username', 0)->innertext;
-            $allFollowers[$key]['name'] = $name;
-            $allFollowers[$key]['screen_name'] = strip_tags($id2);
-            $key++;
-        }
-
-        foreach ($allFollowers as $key => $value) {
+            
             $follower_number = $key + $i*20 + 1;
             $follower_node = $dom->createElement('follower_'.$follower_number);
             
-            $child_node_id = $dom->createElement('Name', $value['name']);
+            $child_node_id = $dom->createElement('Name', $name);
             $follower_node->appendChild($child_node_id);
             
-            $child_node_screen_name = $dom->createElement('Screen_Name', $value['screen_name']);
+            $child_node_screen_name = $dom->createElement('Screen_Name', strip_tags($id2));
             $follower_node->appendChild($child_node_screen_name);
             
             $root->appendChild($follower_node);
+            $key++;
         }
 
         $cursor = @$html->find('.w-button-more a', 0)->href;
