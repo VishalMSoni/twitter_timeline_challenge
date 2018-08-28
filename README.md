@@ -10,6 +10,14 @@ This Challenge consists of three parts such as:
 ## Working Demo of the challenge
 - **[Twitter Timeline Challenge - rtCamp](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/)**
 
+## Corrections as said
+* As per the **twitter api** limit which is *15 call in 15 minutes* so after calling api more than 15 times it shows that **Rate limit excedded** as expected so to overcome the rate limit we have to think beyond the class.
+* Because if we have to download lacs of followers then through api it is tidius task.
+* So for that thing i have implemented the solution using **[Client URL Library](http://php.net/manual/en/book.curl.php)**.
+* This will download the html page of followers by providing **URL** and then it will extract data from that page but in this method it will give only *20 followers* at a time. So after that we have to call another **URL** by providing **Cursor** value.
+* So it will iterate untill all the followers are finished and due to this process of **downloading the page and extracting the data continously** it will take a time !! for that you have to wait for a while.
+* But once we have run the script and then if we close the window then process will run on the server untill **XML** file generated.That file will be on the **public** folder so you may look at it after some time. 
+
 ## Libraries used
 * **[Laravel Socialite](https://laravel.com/docs/5.6/socialite)**
 * **[thujohn twitter api](https://github.com/thujohn/twitter/blob/master/README.md)**
@@ -52,7 +60,9 @@ I am providing user to download his/her followers in two formats **PDF & XML**.I
 Based on user's choice follower's will be downloaded succesfully to his/her preffered location in the PC.
 
 ## Limitations
-- In downloading followers we can download upto 75000 followers, based on twitter api rate limit constraint.
+- I have tried for **100K** followers with storing data in *array* in **PDF** format and it has download only upto **18000** followers which is not acceptable.
+- So, in downloading followers we can download followers only in **XML** format because of memory constraint.
+- If we want to download the followers in **PDF** then first we have to store all the followers in **Array** and then we have to share whole array to blade file so if we have huge amount of followers then it takes lot of time for processing.
 
 ## Coding Guidelines 
 - **UI Framework** : As i am using laravel application so that is following **Twitter Bootstrap** so i have used as much as i can of twitter Bootstrap
@@ -65,7 +75,6 @@ Based on user's choice follower's will be downloaded succesfully to his/her pref
 - **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
 - **[SocialTwitterAccountService.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Services/SocialTwitterAccountService.php)**
 - **[twitterTimeline.blade.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/resources/views/twitterTimeline.blade.php)**
-- **[htmlToPdfView.blade.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/resources/views/htmlToPdfView.blade.php)**
 - **Model for relationship**
   - **[SocialTwitterAccount.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/SocialTwitterAccount.php)**
   - **[User.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/User.php)**
