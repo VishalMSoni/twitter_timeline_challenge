@@ -194,11 +194,13 @@ class SocialAuthTwitterController extends Controller
 
         $cursor = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
         $i++;
-        
-        while ($i<500000 && $cursor) {
+
+        for ($i=1 ; $i < 500000 && $cursor ; $i++) { 
             $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);
-            $i++;
         }
+        
+        // while ($i<500000 && $cursor) {
+        // }
 
         $dom->appendChild($root);
         $dom->save($xml_file_name);
