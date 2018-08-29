@@ -139,25 +139,33 @@ class SocialAuthTwitterController extends Controller
 
         curl_close($ch);
         $html = str_get_html($data);
+        $allFollowers = [];
         $key = 0;
 
         foreach ($html->find('.user-item') as $element) {
             $name = $element->find('.fullname', 0)->innertext;
             $id2 = $element->find('.username', 0)->innertext;
             
-            $follower_number = $key + $i*20 + 1;
-            $follower_node = $dom->createElement('follower_'.$follower_number);
-            
-            $child_node_id = $dom->createElement('Name', $name);
-            $follower_node->appendChild($child_node_id);
-            
-            $child_node_screen_name = $dom->createElement('Screen_Name', strip_tags($id2));
-            $follower_node->appendChild($child_node_screen_name);
-            
-            $root->appendChild($follower_node);
+            $allFollowers[$key]['name'] = $name;
+            $allFollowers[$key]['screen_name'] = strip_tags($id2);
             $key++;
         }
 
+        foreach ($allFollowers as $key => $value) {    
+            $follower_number = $key + $i*20 + 1;
+            $follower_node = $dom->createElement('follower_'.$follower_number);
+            
+            $child_node_id = $dom->createElement('Name', $value['name']);
+            $follower_node->appendChild($child_node_id);
+
+            $child_node_screen_name = $dom->createElement('Screen_Name', $value['screen_name']);
+            $follower_node->appendChild($child_node_screen_name);
+            
+            $root->appendChild($follower_node);
+        }
+
+        unset($allFollowers);
+        
         $cursor = @$html->find('.w-button-more a', 0)->href;
         return $cursor;        
     }
@@ -181,7 +189,7 @@ class SocialAuthTwitterController extends Controller
         $cursor = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
         $i++;
         
-        while ($cursor) {
+        while ($i<500000 && $cursor) {
             $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);
             $i++;
         }
