@@ -169,10 +169,11 @@ class SocialAuthTwitterController extends Controller
             }
             
             unset($allFollowers);
+            $cursor = @$html->find('.w-button-more a', 0)->href;
+            return $cursor;        
+        } else {
+            return 0;
         }
-
-        $cursor = @$html->find('.w-button-more a', 0)->href;
-        return $cursor;        
     }
 
     /**
