@@ -119,7 +119,7 @@ class SocialAuthTwitterController extends Controller
     /**
      * This method download the followers from html using curl
      * 
-     * @return void
+     * @return cursor
      */
     public function getFollowersByHtml($url2, $i=0, $dom, $root) 
     {        
@@ -177,6 +177,23 @@ class SocialAuthTwitterController extends Controller
     }
 
     /**
+     * This method recursively call the upper function
+     * 
+     * @return void
+     */
+    public function recursiveFollowers($cursor, $i, $dom, $root)
+    {
+        $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);    
+        if ($i<500000 && $cursor) {
+            $i++;
+            SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
+        }
+        else {
+            $dom->appendChild($root);
+        }
+    }
+
+    /**
      * This method generates the xml file of followers for specific user
      * 
      * @return void
@@ -190,21 +207,9 @@ class SocialAuthTwitterController extends Controller
         $dom->formatOutput = true;
         $xml_file_name = $request->followerName.'.xml';
         $root = $dom->createElement('Followers');
-        $i = 0;
-
-        $cursor = SocialAuthTwitterController::getFollowersByHtml($value, 0, $dom, $root);    
-        $i++;
-
-        for ($i=1 ; $i < 500000 && $cursor ; $i++) { 
-            $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);
-        }
         
-        // while ($i<500000 && $cursor) {
-        // }
-
-        $dom->appendChild($root);
+        SocialAuthTwitterController::recursiveFollowers($value, 0, $dom, $root);    
         $dom->save($xml_file_name);
-        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...'; 
+        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...';
     }
-
 }
