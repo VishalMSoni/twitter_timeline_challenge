@@ -184,10 +184,14 @@ class SocialAuthTwitterController extends Controller
     public function recursiveFollowers($cursor, $i, $dom, $root)
     {
         $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);    
-        if ($i<500000 && $cursor) {
-            $i++;
-            SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
-        }
+        $val = explode("=",$cursor);
+        if(count($val)>1){
+            $value = (int)$val[1];
+            if ($value!=0) {
+                $i++;
+                SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
+            }
+        } 
         else {
             $dom->appendChild($root);
         }
