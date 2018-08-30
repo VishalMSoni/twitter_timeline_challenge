@@ -136,7 +136,6 @@ class SocialAuthTwitterController extends Controller
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         $data = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         curl_close($ch);
         $html = str_get_html($data);
 
@@ -171,8 +170,6 @@ class SocialAuthTwitterController extends Controller
             unset($allFollowers);
             $cursor = @$html->find('.w-button-more a', 0)->href;
             return $cursor;        
-        } else {
-            return 0;
         }
     }
 
@@ -185,9 +182,10 @@ class SocialAuthTwitterController extends Controller
     {
         $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);    
         $val = explode("=",$cursor);
+
         if(count($val)>1){
             $value = (int)$val[1];
-            if ($value!=0) {
+            if ($value!=0 and $i<500000) {
                 $i++;
                 SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
             }

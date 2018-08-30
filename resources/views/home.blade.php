@@ -33,7 +33,7 @@
                                 <input type="radio" name="downloadType" value="pdf" id="downloadType">PDF
                             </div> -->
                             <div class="col-md-2">
-                                <button type="submit" id="get_followers" class="btn btn-success" onclick="clearDetails()">Download Followers</button>
+                                <button type="submit" id="get_followers" class="btn btn-success">Download Followers</button>
                             </div>
                         </div>
                     </form>
