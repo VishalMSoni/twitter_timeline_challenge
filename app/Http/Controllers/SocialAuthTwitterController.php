@@ -16,23 +16,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Laravel\Socialite\Facades\Socialite;
-use App\Services\SocialTwitterAccountService;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Contracts\User as ProviderUser;
+use App\Services\SocialTwitterAccountService;
 use App\SocialTwitterAccount;
+use App\Mail\SendMailable;
 use Twitter;
 use File;
 use Auth;
 use Session;
 use DOMDocument;
 use DOMAttr;
-use PDF;
 use Mail;
-use Xml2Pdf;
+use xml2pdf;
+use SimpleXMLElement;
+use PDF;
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '5120M');
+
 include './simple_html_dom.php';
 
 /**
@@ -156,7 +160,7 @@ class SocialAuthTwitterController extends Controller
 
             foreach ($allFollowers as $key => $value) {    
                 $follower_number = $key + $i*20 + 1;
-                $follower_node = $dom->createElement('follower_'.$follower_number);
+                $follower_node = $dom->createElement('follower');
                 
                 $child_node_id = $dom->createElement('Name', $value['name']);
                 $follower_node->appendChild($child_node_id);
@@ -196,6 +200,17 @@ class SocialAuthTwitterController extends Controller
     }
 
     /**
+     * This method send mail to user
+     * 
+     * @return void
+     */
+    public function sendEmail($mailData)
+    {
+        Mail::to($mailData['user_mail'])->send(new SendMailable($mailData));
+        return 'PDF file attached !!!';
+    }
+
+    /**
      * This method generates the xml file of followers for specific user
      * 
      * @return void
@@ -212,6 +227,32 @@ class SocialAuthTwitterController extends Controller
         
         SocialAuthTwitterController::recursiveFollowers($value, 0, $dom, $root);    
         $dom->save($xml_file_name);
-        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...';
+        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...<br>';   
+        
+        $xml = simplexml_load_file($xml_file_name) or die("Error: Cannot create object");
+        $allFollowers =  (array) $xml;
+        $followersArray = [];
+
+        foreach ($allFollowers['follower'] as $key => $value) {
+            $sub_followers =  (array) $value;            
+            $followersArray[$key]['name'] = $sub_followers['Name']; 
+            $followersArray[$key]['screen_name'] = $sub_followers['Screen_Name'];
+            unset($sub_followers);
+        }
+
+        view()->share('followersArray', $followersArray);
+        $pdf_file_name = $request->followerName.'.pdf';
+
+        $pdf = PDF::loadView('htmlToPdfView');
+        echo '<a href="'.$pdf_file_name.'" download>'.$pdf_file_name.'</a> has been successfully created ! Click it ...';   
+        
+        $pdf->save($pdf_file_name);
+        $mailData = [];
+        $mailData['name'] = $request->followerName;
+        $mailData['user_mail'] = $request->followerEmail;
+        $mailData['pdf_file'] = $pdf_file_name;
+
+        SocialAuthTwitterController::sendEmail($mailData);
+        return 'PDF file generated !!!';
     }
 }

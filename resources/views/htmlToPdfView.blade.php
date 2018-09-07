@@ -31,7 +31,7 @@
                 <th>Screen Name</th>
                 <th>Name</th>
             </tr>
-            @foreach ($allFollowers as $key => $value)
+            @foreach ($followersArray as $key => $value)
                 <tr>
                     <td>{{ $key + 1}}</td>
                     <td>{{ $value['name'] }}</td>

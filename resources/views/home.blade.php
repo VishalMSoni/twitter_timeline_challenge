@@ -26,12 +26,11 @@
                     <form action="{{ url('/downloadFollowers') }}" id="downloadForm">
                         <div class="form-group row">
                             <div class="col-md-4">
-                                <input class="form-control" id="followerName" type="text" name="followerName" placeholder="Enter valid Screen name of user" required>
+                                <input class="form-control bottomStyle" id="followerName" type="text" name="followerName" placeholder="Enter valid Screen name of user" required>
                             </div>
-                            <!-- <div class="col-md-3 topStyle bottomStyle">
-                                <input type="radio" name="downloadType" value="xml" id="downloadType" required>XML<br>
-                                <input type="radio" name="downloadType" value="pdf" id="downloadType">PDF
-                            </div> -->
+                            <div class="col-md-4">
+                                <input class="form-control bottomStyle" id="followerEmail" type="text" name="followerEmail" placeholder="Enter valid email Address" required>
+                            </div>
                             <div class="col-md-2">
                                 <button type="submit" id="get_followers" class="btn btn-success">Download Followers</button>
                             </div>
