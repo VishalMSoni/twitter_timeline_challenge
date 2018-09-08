@@ -125,7 +125,7 @@ class SocialAuthTwitterController extends Controller
      * 
      * @return cursor
      */
-    public function getFollowersByHtml($url2, $i=0, $dom, $root) 
+    public function getFollowersByHtml($url2, $i=0, $dom, $root, &$followersArray=[]) 
     {        
         $url = 'https://twitter.com' . $url2;
         $ch = curl_init();
@@ -142,23 +142,21 @@ class SocialAuthTwitterController extends Controller
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         $html = str_get_html($data);
+        $key = 0;
 
         if ($html) {
-            $allFollowers = [];
-            $key = 0;
-            
             foreach ($html->find('.user-item') as $element) {
                 if ($element) {
                     $name = $element->find('.fullname', 0)->innertext;
                     $id2 = $element->find('.username', 0)->innertext;
                     
-                    $allFollowers[$key]['name'] = $name;
-                    $allFollowers[$key]['screen_name'] = strip_tags($id2);
+                    $followersArray[$key + $i*20]['name'] = $name;
+                    $followersArray[$key + $i*20]['screen_name'] = strip_tags($id2);
                     $key++;
                 }
             }
 
-            foreach ($allFollowers as $key => $value) {    
+            foreach ($followersArray as $key => $value) {    
                 $follower_number = $key + $i*20 + 1;
                 $follower_node = $dom->createElement('follower');
                 
@@ -170,8 +168,7 @@ class SocialAuthTwitterController extends Controller
                 
                 $root->appendChild($follower_node);
             }
-            
-            unset($allFollowers);
+
             $cursor = @$html->find('.w-button-more a', 0)->href;
             return $cursor;        
         }
@@ -182,16 +179,16 @@ class SocialAuthTwitterController extends Controller
      * 
      * @return void
      */
-    public function recursiveFollowers($cursor, $i, $dom, $root)
+    public function recursiveFollowers($cursor, $i, $dom, $root, &$followersArray=[])
     {
-        $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);    
+        $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root, $followersArray);    
         $val = explode("=",$cursor);
 
         if(count($val)>1){
             $value = (int)$val[1];
             if ($value!=0 and $i<500000) {
                 $i++;
-                SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
+                SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root, $followersArray);    
             }
         } 
         else {
@@ -224,22 +221,27 @@ class SocialAuthTwitterController extends Controller
         $dom->formatOutput = true;
         $xml_file_name = $request->followerName.'.xml';
         $root = $dom->createElement('Followers');
-        
-        SocialAuthTwitterController::recursiveFollowers($value, 0, $dom, $root);    
+        $followersArray = [];
+        $key = 0;
+
+        SocialAuthTwitterController::recursiveFollowers($value, 0, $dom, $root, $followersArray);    
         $dom->save($xml_file_name);
         echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...<br>';   
         
-        $xml = simplexml_load_file($xml_file_name) or die("Error: Cannot create object");
-        $allFollowers =  (array) $xml;
-        $followersArray = [];
+        // $xml = simplexml_load_file($xml_file_name) or die("Error: Cannot create object");
+        // $allFollowers =  (array) $xml;
 
-        foreach ($allFollowers['follower'] as $key => $value) {
-            $sub_followers =  (array) $value;            
-            $followersArray[$key]['name'] = $sub_followers['Name']; 
-            $followersArray[$key]['screen_name'] = $sub_followers['Screen_Name'];
-            unset($sub_followers);
-        }
+        // foreach ($allFollowers['follower'] as $key => $value) {
+        //     $sub_followers =  (array) $value;            
+        //     $followersArray[$key]['name'] = $sub_followers['Name']; 
+        //     $followersArray[$key]['screen_name'] = $sub_followers['Screen_Name'];
+        //     unset($sub_followers);
+        // }
 
+        // print_r("<pre>");
+        // print_r($followersArray);
+        // print_r("<pre>");
+        
         view()->share('followersArray', $followersArray);
         $pdf_file_name = $request->followerName.'.pdf';
 
