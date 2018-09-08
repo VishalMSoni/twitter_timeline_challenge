@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SendMailable extends Mailable
 {
     use Queueable, SerializesModels;
-    public $name, $userMail, $pdf_file;
+    public $name, $userMail, $xml_file;
 
     /**
      * Create a new message instance.
@@ -21,7 +21,7 @@ class SendMailable extends Mailable
     {
         $this->name = $mailData['name'];
         $this->userMail = $mailData['user_mail'];
-        $this->pdf_file = $mailData['pdf_file'];
+        $this->xml_file = $mailData['xml_file'];
     }
 
     /**
@@ -33,7 +33,7 @@ class SendMailable extends Mailable
     {
         return $this->from('vishalsoni611@gmail.com')
             ->view('email.name')
-            ->subject('PDF file attached !!!')
-            ->attach(public_path($this->pdf_file));
+            ->subject('XML file attached !!!')
+            ->attach(public_path($this->xml_file));
     }
 }

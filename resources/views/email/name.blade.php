@@ -3,7 +3,7 @@
 
     <h3>Your PDF file is attached here with for this {{ $name }}</h3>
 
-    <h3>File name : {{ $pdf_file }}</h3>
+    <h3>File name : {{ $xml_file }}</h3>
 
     <h3>Thanks,</h3>
     <h3>Vishal Murlidhar Soni</h3>
