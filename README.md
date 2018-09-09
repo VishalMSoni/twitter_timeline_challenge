@@ -18,6 +18,12 @@ This Challenge consists of three parts such as:
 * So it will iterate untill all the followers are finished and due to this process of **downloading the page and extracting the data continously** it will take a time !! for that you have to wait for a while.
 * But once we have run the script and then if we close the window then process will run on the server untill **XML** file generated.That file will be on the **public** folder so you may look at it after some time. 
 * All important methods(*main business logic*) are provided in **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
+* Apart from that i am sending email to user as said in conversation by taking email id of a user.
+* I have tried to convert **XML** file to **PDF** file by many ways but unfortunately i am not able to convert it succesfully.I have tried following ways to convert **XML** file to **PDF** file.
+ - Parsing the XML file and extracting into an array, after that sending data view file to make a PDF but in this way it is working in *Localhost* but not working in a live server due to some memory constraints.
+ - Tried to use different libraries :-
+   - **[psliwa/PHPPdf](https://github.com/psliwa/PHPPdf)**
+   - **[xml2pdf](http://xml-2-pdf.sourceforge.net/phpdoc/html/)**
 
 ## Some example files
 * **[itzzistylezz.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/itzzistylezz.xml)**
