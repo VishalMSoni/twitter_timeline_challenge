@@ -23,7 +23,7 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 use App\Services\SocialTwitterAccountService;
 use App\SocialTwitterAccount;
 use App\Mail\SendMailable;
-use PHPPdf\Core\Configuration\LoaderImpl;
+use App\Jobs\SendEmailJob;
 use Twitter;
 use File;
 use Auth;
@@ -33,11 +33,10 @@ use Mail;
 use DOMAttr;
 use SimpleXMLElement;
 use PDF;
+use Carbon\Carbon;
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '5120M');
-
-include './simple_html_dom.php';
 
 /**
  * This class handles the all functionalities required 
@@ -121,138 +120,14 @@ class SocialAuthTwitterController extends Controller
     }
 
     /**
-     * This method download the followers from html using curl
-     * 
-     * @return cursor
-     */
-    public function getFollowersByHtml($url2, $i=0, $dom, $root) 
-    {        
-        $url = 'https://twitter.com' . $url2;
-        $ch = curl_init();
-        $timeout = 5;
-        $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
-        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        $html = str_get_html($data);
-
-        if ($html) {
-            $allFollowers = [];
-            $key = 0;
-            
-            foreach ($html->find('.user-item') as $element) {
-                if ($element) {
-                    $name = $element->find('.fullname', 0)->innertext;
-                    $id2 = $element->find('.username', 0)->innertext;
-                    
-                    $allFollowers[$key]['name'] = $name;
-                    $allFollowers[$key]['screen_name'] = strip_tags($id2);
-                    $key++;
-                }
-            }
-
-            foreach ($allFollowers as $key => $value) {    
-                $follower_number = $key + $i*20 + 1;
-                $follower_node = $dom->createElement('follower_'.$follower_number);
-                
-                $child_node_id = $dom->createElement('Name', $value['name']);
-                $follower_node->appendChild($child_node_id);
-
-                $child_node_screen_name = $dom->createElement('Screen_Name', $value['screen_name']);
-                $follower_node->appendChild($child_node_screen_name);
-                
-                $root->appendChild($follower_node);
-            }
-            
-            unset($allFollowers);
-            $cursor = @$html->find('.w-button-more a', 0)->href;
-            return $cursor;        
-        }
-    }
-
-    /**
-     * This method recursively call the upper function
-     * 
-     * @return void
-     */
-    public function recursiveFollowers($cursor, $i, $dom, $root)
-    {
-        $cursor = SocialAuthTwitterController::getFollowersByHtml($cursor, $i, $dom, $root);    
-        $val = explode("=",$cursor);
-
-        if(count($val)>1){
-            $value = (int)$val[1];
-            if ($value!=0 and $i<500000) {
-                $i++;
-                SocialAuthTwitterController::recursiveFollowers($cursor, $i, $dom, $root);    
-            }
-        } 
-        else {
-            $dom->appendChild($root);
-        }
-    }
-
-    /**
-     * This method send mail to user
-     * 
-     * @return void
-     */
-    public function sendEmail($mailData)
-    {
-        Mail::to($mailData['user_mail'])->send(new SendMailable($mailData));
-        return 'PDF file attached !!!';
-    }
-
-    /**
      * This method generates the xml file of followers for specific user
      * 
      * @return void
      */
     public function getFollowers(Request $request)
     {
-        $value = '/' . $request->followerName . '/followers';
-        $dom = new DOMDocument();
-        $dom->encoding = 'utf-8';
-        $dom->xmlVersion = '1.0';
-        $dom->formatOutput = true;
-        $xml_file_name = $request->followerName.'.xml';
-        $root = $dom->createElement('Followers');
-        $followersArray = [];
-        
-        SocialAuthTwitterController::recursiveFollowers($value, 0, $dom, $root);    
-        $dom->save($xml_file_name);
-        echo '<a href="'.$xml_file_name.'" download>'.$xml_file_name.'</a> has been successfully created ! Click it ...<br>';   
-
-        // $xml = simplexml_load_file($xml_file_name) or die("Error: Cannot create object");
-        // $allFollowers =  (array) $xml;
-
-        // foreach ($allFollowers['follower'] as $key => $value) {
-        //     $sub_followers =  (array) $value;            
-        //     $followersArray[$key]['name'] = $sub_followers['Name']; 
-        //     $followersArray[$key]['screen_name'] = $sub_followers['Screen_Name'];
-        //     unset($sub_followers);
-        // }
-
-        // view()->share('followersArray', $followersArray);
-        // $pdf_file_name = $request->followerName.'.pdf';
-
-        // $pdf = PDF::loadView('htmlToPdfView');
-        // echo '<a href="'.$pdf_file_name.'" download>'.$pdf_file_name.'</a> has been successfully created ! Click it ...';   
-        // $pdf->save($pdf_file_name);
-        
-        $mailData = [];
-        $mailData['name'] = $request->followerName;
-        $mailData['user_mail'] = $request->followerEmail;
-        $mailData['xml_file'] = $xml_file_name;
-
-        SocialAuthTwitterController::sendEmail($mailData);
-        return 'XML file generated !!!';
+        SendEmailJob::dispatch(new SendEmailJob($request))
+                ->delay(Carbon::now()->addSeconds(1));
+        return 'XML file generated and emailed !!!';
     }
 }
