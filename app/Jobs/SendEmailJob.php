@@ -141,7 +141,7 @@ class SendEmailJob implements ShouldQueue
             $dom->appendChild($root);
         }
     }
-    
+
     /**
      * Execute the job.
      *
@@ -159,13 +159,46 @@ class SendEmailJob implements ShouldQueue
         $followersArray = [];
         
         SendEmailJob::recursiveFollowers($value, 0, $dom, $root);    
-        $dom->save($xml_file_name);
+        
+        $dom->save(public_path($xml_file_name));
 
-        $mailData = [];
-        $mailData['name'] = $this->followerName;
-        $mailData['user_mail'] = $this->followerEmail;
-        $mailData['xml_file'] = $xml_file_name;
+        $to = $this->followerEmail;
+        $subject = 'Attached XML file for '.$this->followerName.' this follower$
+        $message = 'Here is XML file attached for '.$this->followerName.' this $
+        $file_type = "XML";
 
-        Mail::to($this->followerEmail)->send(new SendMailable($mailData));
+        $content = file_get_contents(public_path($xml_file_name));
+
+        //$handle = fopen(public_path($xml_file_name), "rb");
+        //$size = filesize(public_path($xml_file_name));
+        //$content = fread($handle, $size);
+        //fclose($handle);
+
+        $boundary = md5("random");
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Reply-To: ".$this->followerEmail."\r\n";
+        $headers .= "Content-Type: multipart/mixed;\r\n";
+        $headers .= "boundary = $boundary\r\n";
+
+        $headers = "--$boundary\r\n";
+        $headers .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
+        $headers .= "Content-Transfer-Encoding: base64\r\n\r\n"; 
+        $headers .= $message; 
+
+        $headers = "--$boundary\r\n";
+        $headers ="Content-Type: $file_type; name=".$xml_file_name."\r\n";
+        $headers .="Content-Disposition: attachment; filename=".$xml_file_name.$
+        //$headers .="Content-Transfer-Encoding: base64\r\n";
+        //$body .="X-Attachment-Id: ".rand(1000, 99999)."\r\n\r\n"; 
+
+        $body = $content;
+        mail($to, $subject, $body, $headers);
+
+        //$mailData = [];
+        //$mailData['name'] = $this->followerName;
+        //$mailData['user_mail'] = $this->followerEmail;
+        //$mailData['xml_file'] = $xml_file_name;
+
+        //Mail::to($this->followerEmail)->send(new SendMailable($mailData));   
     }
 }

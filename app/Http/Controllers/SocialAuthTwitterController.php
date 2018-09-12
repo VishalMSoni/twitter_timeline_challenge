@@ -128,6 +128,7 @@ class SocialAuthTwitterController extends Controller
     {
         SendEmailJob::dispatch(new SendEmailJob($request))
                 ->delay(Carbon::now()->addSeconds(1));
-        return 'XML file generated and emailed !!!';
+        
+        return 'XML file will be generated and emailed !!!';
     }
 }
