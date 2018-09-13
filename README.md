@@ -10,6 +10,25 @@ This Challenge consists of three parts such as:
 ## Working Demo of the challenge
 - **[Twitter Timeline Challenge - rtCamp](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/)**
 
+## Added Corrections as per conversation
+
+### Downloading followers part
+* As per last conversation you have said to that followers are not downloading properly on that thing i want to say that i am taking data using **Web Scrapping** not through any **API** so it may happen that sometime by taking live data whole data may not come due to any reason.
+* Also i have checked for **WCEurope** twitter handle for two times and it has downloaded complete followers both the time.
+* So i request you that if any such thing happens then refresh the process you will get your desired output.
+
+### Background Job Processing
+* Now, i have implemented background job processing through **[Laravel Queue](https://laravel.com/docs/5.7/queues)** and after that i am sending **XML** file to user's mail address.
+* In sending mail i have changed the process because earlier i am sending mail through **[Laravel Mail](https://laravel.com/docs/5.7/mail)** but in this method there is bottlenack that it is not able to hold **SMTP** connection for long time.
+* So for large amount of followers it shows *SMTP connection timed out error* after that i have implemented **[PHP Mail](http://php.net/manual/en/function.mail.php)** for sending mail and then it solved the issue.
+* I have used **[tmux commands](https://gist.github.com/MohamedAlaa/2961058)** to run the commands on server for background job processing.
+
+## Some example files
+* **[WCEurope](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/WCEurope.xml)**
+* **[itzzistylezz.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/itzzistylezz.xml)**
+* **[marethr63.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/marethr63.xml)**
+* **[Gainwith_Yo.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/Gainwith_Yo.xml)**
+
 ## Corrections as said
 * As per the **twitter api** limit which is *15 call in 15 minutes* so after calling api more than 15 times it shows that **Rate limit excedded** as expected so to overcome the rate limit we have to think another solution.
 * As we have to download thousands of followers then through api it is tidius task.
@@ -24,11 +43,6 @@ This Challenge consists of three parts such as:
  - Tried to use different libraries :-
    - **[psliwa/PHPPdf](https://github.com/psliwa/PHPPdf)**
    - **[xml2pdf](http://xml-2-pdf.sourceforge.net/phpdoc/html/)**
-
-## Some example files
-* **[itzzistylezz.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/itzzistylezz.xml)**
-* **[marethr63.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/marethr63.xml)**
-* **[Gainwith_Yo.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/Gainwith_Yo.xml)**
 
 ## Limitations
 - I have tried for **100K** followers with storing data in *array* in **PDF** format and it has download only upto **18000** followers which is not acceptable.
@@ -84,6 +98,7 @@ Based on user's choice follower's will be downloaded succesfully to his/her pref
 - **GitHub** : From the starting of this challenge i have started to use **[GitHub](https://github.com/)** and commiting and pushing the code in my **[GitHub Repository](https://github.com/VishalMSoni/twitter_timeline_challenge)**. 
 
 ## List of some important files
+- **[SendEmailJob.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Jobs/SendEmailJob.php)**
 - **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
 - **[SocialTwitterAccountService.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Services/SocialTwitterAccountService.php)**
 - **[twitterTimeline.blade.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/resources/views/twitterTimeline.blade.php)**
