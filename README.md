@@ -8,13 +8,12 @@ This Challenge consists of three parts such as:
 3. Download User's followers in pdf & xml format.
 
 ## Working Demo of the challenge
-- **[Twitter Timeline Challenge - rtCamp](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/)**
+- **[Twitter Timeline Challenge - rtCamp](http://ec2-3-16-89-248.us-east-2.compute.amazonaws.com/)**
 
 ## Added Corrections as per conversation
 
 ### Downloading followers part
 * As per last conversation you have said to that followers are not downloading properly on that thing i want to say that i am taking data using **Web Scrapping** not through any **API** so it may happen that sometime by taking live data whole data may not come due to any reason.
-* Also i have checked for **WCEurope** twitter handle for two times and it has downloaded complete followers both the time.
 * So i request you that if any such thing happens then refresh the process you will get your desired output.
 
 ### Background Job Processing
@@ -22,12 +21,6 @@ This Challenge consists of three parts such as:
 * In sending mail i have changed the process because earlier i am sending mail through **[Laravel Mail](https://laravel.com/docs/5.7/mail)** but in this method there is bottlenack that it is not able to hold **SMTP** connection for long time.
 * So for large amount of followers it shows *SMTP connection timed out error* after that i have implemented **[PHP Mail](http://php.net/manual/en/function.mail.php)** for sending mail and then it solved the issue.
 * I have used **[tmux commands](https://gist.github.com/MohamedAlaa/2961058)** to run the commands on server for background job processing.
-
-## Some example files
-* **[WCEurope](http://ec2-18-191-220-211.us-east-2.compute.amazonaws.com/WCEurope.xml)**
-* **[itzzistylezz.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/itzzistylezz.xml)**
-* **[marethr63.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/marethr63.xml)**
-* **[Gainwith_Yo.xml](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/public/Gainwith_Yo.xml)**
 
 ## Corrections as said
 * As per the **twitter api** limit which is *15 call in 15 minutes* so after calling api more than 15 times it shows that **Rate limit excedded** as expected so to overcome the rate limit we have to think another solution.
@@ -38,16 +31,6 @@ This Challenge consists of three parts such as:
 * But once we have run the script and then if we close the window then process will run on the server untill **XML** file generated.That file will be on the **public** folder so you may look at it after some time. 
 * All important methods(*main business logic*) are provided in **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
 * Apart from that i am sending email to user as said in conversation by taking email id of a user.
-* I have tried to convert **XML** file to **PDF** file by many ways but unfortunately i am not able to convert it succesfully.I have tried following ways to convert **XML** file to **PDF** file.
- - Parsing the XML file and extracting into an array, after that sending data view file to make a PDF but in this way it is working in *Localhost* but while doing in live server i am getting **Core Dumped error with Segmentation fault**.
- - Tried to use different libraries :-
-   - **[psliwa/PHPPdf](https://github.com/psliwa/PHPPdf)**
-   - **[xml2pdf](http://xml-2-pdf.sourceforge.net/phpdoc/html/)**
-
-## Limitations
-- I have tried for **100K** followers with storing data in *array* in **PDF** format and it has download only upto **18000** followers which is not acceptable.
-- So, in downloading followers we can download followers only in **XML** format because of memory constraint.
-- If we want to download the followers in **PDF** then first we have to store all the followers in **Array** and then we have to share whole array to blade file so if we have huge amount of followers then it takes lot of time for processing as well as lot of memory are needed.
 
 ## Libraries used
 * **[Laravel Socialite](https://laravel.com/docs/5.6/socialite)**
@@ -81,14 +64,6 @@ So after details are fetched tweets & followers will be showed in **JS slider & 
 When user will search follower then his/her follower will be searched and **Auto-suggest support** will suggest the follower as soon as we start typing.Once follower is searched then his screen_name will be passed to respective function by **AJAX** call 
  - if function returns data *succesfully* then it will be showed in **JS slider**
  - otherwise **Alert** will be showed to write proper screen_name
-
-#### Download Followers
-Currently i am downloading user's followers in **XML** format,earlier i have provided two formats **PDF & XML**.In that i am also providing **flexibility** to user like, **get only id's of followers** or **get id's,screen_name,name's of the followers**.
-
-1. **XML** part i am using **[DOMDOCUMENT](http://php.net/manual/en/class.domdocument.php)** and
-2. **PDF** part **[DOMPDF](https://github.com/dompdf/dompdf)** is used.
-
-Based on user's choice follower's will be downloaded succesfully to his/her preffered location in the PC.
 
 ## Coding Guidelines 
 - **UI Framework** : As i am using laravel application so that is following **Twitter Bootstrap** so i have used as much as i can of twitter Bootstrap
