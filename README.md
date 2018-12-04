@@ -32,6 +32,13 @@ This Challenge consists of three parts such as:
 * All important methods(*main business logic*) are provided in **[SocialAuthTwitterController.php](https://github.com/VishalMSoni/twitter_timeline_challenge/blob/master/app/Http/Controllers/SocialAuthTwitterController.php)**
 * Apart from that i am sending email to user as said in conversation by taking email id of a user.
 
+## Conversation in PDF
+* I have tried to convert XML file to PDF file by many ways but unfortunately i am not able to convert it succesfully.I have tried following ways to convert XML file to PDF file.
+* Parsing the XML file and extracting into an array, after that sending data view file to make a PDF but in this way it is working in Localhost but while doing in live server i am getting Core Dumped error with Segmentation fault.
+* Tried to use different libraries :-
+  - **[psliwa/PHPPdf](https://github.com/psliwa/PHPPdf)**
+  - **[xml2pdf](http://xml-2-pdf.sourceforge.net/phpdoc/html/)**
+
 ## Libraries used
 * **[Laravel Socialite](https://laravel.com/docs/5.6/socialite)**
 * **[thujohn twitter api](https://github.com/thujohn/twitter/blob/master/README.md)**
